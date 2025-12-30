@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoM Dev — Future of Making</title>
+    <meta name="description" content="AI-powered tools and frameworks for software teams. Open source, practical, no hype.">
+    <meta property="og:title" content="FoM Dev — Future of Making">
+    <meta property="og:description" content="AI-powered tools and frameworks for software teams.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fom-dev.github.io">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f1117;
+            --bg-secondary: #161920;
+            --bg-tertiary: #1c1f2a;
+            --mint: #5BDC9E;
+            --mint-dim: #4bc78a;
+            --mint-glow: rgba(91, 220, 158, 0.15);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --border: #27272a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Subtle grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(91, 220, 158, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(91, 220, 158, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 17, 23, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .nav-logo img {
+            height: 32px;
+        }
+
+        .nav-logo span {
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--mint);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero h1 span {
+            color: var(--mint);
+        }
+
+        .hero-tagline {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .hero-description {
+            max-width: 540px;
+            color: var(--text-tertiary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--mint);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--mint-dim);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--mint-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--mint);
+            color: var(--mint);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+            color: var(--text-tertiary);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* Section base */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--mint);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--mint-glow);
+            border-radius: 4px;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .section-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* About */
+        #about {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .about-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .about-card:hover {
+            border-color: var(--mint);
+            transform: translateY(-4px);
+        }
+
+        .about-card:first-child {
+            grid-column: span 2;
+        }
+
+        .about-card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--mint-glow);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--mint);
+        }
+
+        .about-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-card p {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            line-height: 1.6;
+        }
+
+        /* Projects */
+        #projects {
+            text-align: center;
+        }
+
+        #projects .section-description {
+            margin: 0 auto 3rem;
+        }
+
+        .project-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: var(--mint);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--mint), var(--mint-dim));
+        }
+
+        .project-badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--mint);
+            background: var(--mint-glow);
+            padding: 0.25rem 0.625rem;
+            border-radius: 4px;
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .project-card h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .project-card > p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            line-height: 1.7;
+            max-width: 600px;
+        }
+
+        .project-stats {
+            display: flex;
+            gap: 2.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .project-stat {
+            text-align: left;
+        }
+
+        .project-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--mint);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .project-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .project-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .project-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .project-feature svg {
+            width: 16px;
+            height: 16px;
+            color: var(--mint);
+            flex-shrink: 0;
+        }
+
+        .project-card .btn {
+            margin-right: 1rem;
+        }
+
+        /* Contact */
+        #contact {
+            text-align: center;
+            padding-bottom: 4rem;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .contact-link:hover {
+            border-color: var(--mint);
+            color: var(--mint);
+            transform: translateY(-2px);
+        }
+
+        .contact-link svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--mint);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.25rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 7rem 1.5rem 3rem;
+            }
+
+            .hero-logo {
+                width: 90px;
+                height: 90px;
+            }
+
+            #about {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .about-visual {
+                order: -1;
+            }
+
+            .project-stats {
+                flex-wrap: wrap;
+                gap: 1.5rem;
+            }
+
+            .project-features {
+                grid-template-columns: 1fr;
+            }
+
+            .project-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                width: 100%;
+                padding: 0 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animations on scroll */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="nav-logo">
+            <img src="logo-icon.svg" alt="FoM Dev">
+            <span>FoM Dev</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="https://github.com/fom-dev" target="_blank">GitHub</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <img src="logo-icon.svg" alt="FoM Dev" class="hero-logo">
+        <h1>FoM <span>Dev</span></h1>
+        <p class="hero-tagline">Future of Making</p>
+        <p class="hero-description">
+            We build AI-powered tools and open source frameworks for software teams. 
+            Practical solutions, no hype.
+        </p>
+        <div class="hero-cta">
+            <a href="https://github.com/fom-dev" class="btn btn-primary" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                View on GitHub
+            </a>
+            <a href="#projects" class="btn btn-secondary">
+                Explore Projects
+            </a>
+        </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+        </div>
+    </section>
+
+    <section id="about" class="fade-in">
+        <div class="about-content">
+            <span class="section-label">About</span>
+            <h2 class="section-title">Humans + AI,<br>building together</h2>
+            <p class="section-description">
+                FoM Dev is a software house focused on creating tools that help developers 
+                work smarter with AI. We share everything we build and learn.
+            </p>
+        </div>
+        <div class="about-visual">
+            <div class="about-card">
+                <div class="about-card-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <h3>Open Source First</h3>
+                <p>All our frameworks and tools are open source. Fork, customize, make them yours.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </div>
+                <h3>Practical</h3>
+                <p>Tools that solve real problems, tested in production.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+                </div>
+                <h3>No Hype</h3>
+                <p>What works, what doesn't. We share the truth.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="fade-in">
+        <span class="section-label">Projects</span>
+        <h2 class="section-title">What we're building</h2>
+        <p class="section-description">
+            Open source frameworks and tools for AI-assisted development.
+        </p>
+
+        <div class="project-card">
+            <span class="project-badge">Open Source</span>
+            <h3>Company in a Box</h3>
+            <p>
+                A complete AI-powered organizational structure. 42 specialized agents across 11 departments, 
+                plus 10 playbooks for common workflows. Each agent has one job, defined inputs/outputs, 
+                and explicit boundaries.
+            </p>
+
+            <div class="project-stats">
+                <div class="project-stat">
+                    <div class="project-stat-value">42</div>
+                    <div class="project-stat-label">Agents</div>
+                </div>
+                <div class="project-stat">
+                    <div class="project-stat-value">11</div>
+                    <div class="project-stat-label">Departments</div>
+                </div>
+                <div class="project-stat">
+                    <div class="project-stat-value">10</div>
+                    <div class="project-stat-label">Playbooks</div>
+                </div>
+            </div>
+
+            <div class="project-features">
+                <div class="project-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Strict agent boundaries
+                </div>
+                <div class="project-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Defined inputs & outputs
+                </div>
+                <div class="project-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Works with any LLM
+                </div>
+                <div class="project-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Apache 2.0 license
+                </div>
+            </div>
+
+            <a href="https://github.com/fom-dev/company-in-a-box" class="btn btn-primary" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                View Repository
+            </a>
+            <a href="https://github.com/fom-dev/company-in-a-box#usage" class="btn btn-secondary" target="_blank">
+                Read Docs
+            </a>
+        </div>
+    </section>
+
+    <section id="contact" class="fade-in">
+        <span class="section-label">Contact</span>
+        <h2 class="section-title">Let's connect</h2>
+        <p class="section-description" style="margin: 0 auto;">
+            Follow our work, contribute to projects, or just say hi.
+        </p>
+        <div class="contact-links">
+            <a href="https://github.com/fom-dev" class="contact-link" target="_blank" title="GitHub">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </a>
+            <a href="https://linkedin.com/company/fomdev" class="contact-link" target="_blank" title="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="mailto:hello@fomdev.studio" class="contact-link" target="_blank" title="Email">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2024 FoM Dev — <a href="https://github.com/fom-dev">Open Source</a> with ♥</p>
+    </footer>
+
+    <script>
+        // Fade in on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
